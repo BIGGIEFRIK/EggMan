@@ -8,7 +8,7 @@ function Eggman:new()
     stamina,
     workrate
   }
-  setmetatable(Eggman, self)
+  setmetatable(human, self)
   self.__index = self
   return Eggman
 end
@@ -20,7 +20,7 @@ function Eggman:load()
   self.stamina = 100
   self.money = 0
   self.workrate = 1
-  self.eggman = love.graphics.newImage("eggman.png")
+  self.img = love.graphics.newImage("eggman.png")
 end
 
 function Eggman:update(dt)
@@ -41,10 +41,10 @@ function Eggman:update(dt)
   end
 
   if love.keyboard.isDown('p') and self.stamina > 0 then
-    self.speed = 2
+    self.speed = 5
     self.stamina = self.stamina - 1
   else
-    self.speed = 1
+    self.speed = 2
   end
 
   if self.px > 795 then
@@ -63,7 +63,6 @@ function Eggman:update(dt)
     self.py = 590
   end
 end
-
 
 function Eggman:draw()
 
