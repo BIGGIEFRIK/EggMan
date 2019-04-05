@@ -28,9 +28,11 @@ local arrowgo = "r"
 local eggsdone = 0
 local donelimit = 10
 local eggscookedheld = 0
-local cookrate = 1
+local cookrate = 5
 local layingPrice = 10
 local dialogue = "Welcome to Eggman Incremental! WASD to move."
+local tutorial = 0
+local tY = 270
 
 function Play:new()
   local play = {}
@@ -112,6 +114,75 @@ function Play:update(dt)
   elseif arrowgo == "l" then
     arrowx = arrowx - 0.5
   end
+  --tutorial
+  if tutorial == 0 then
+    if love.keyboard.isDown('w') or love.keyboard.isDown('a') or love.keyboard.isDown('s') or love.keyboard.isDown('d') then
+      dialogue = "Cool! Also use P to sprint!"
+      tutorial = 1
+    end
+  end
+
+  if tutorial == 1 then
+    if love.keyboard.isDown('p') and tutorial == 1 then
+      dialogue = "NICE! Now, go to the chicken for eggs!"
+      tutorial = 2
+    end
+    if col == true then
+      dialogue = "Ok then don't sprint I guess... Put those eggs in the pan!"
+      tutorial = 3
+    end
+  end
+
+  if tutorial == 2 then
+    if col == true then
+      dialogue = "WOW! Now you have raw eggs! Put em in the pan!"
+      tutorial = 3
+    end
+  end
+
+  if tutorial == 3 then
+    if col1 == true then
+      dialogue = "The eggs are cooking! They'll take like... 5 secs per egg."
+      tutorial = 4
+    end
+  end
+
+  if tutorial == 4 then
+    if col2 == true then
+      dialogue = "NOW SELL THE COOKED EGGS! :DDD"
+      tutorial = 5
+    end
+  end
+
+  if tutorial == 5 then
+    if col3 == true then
+      dialogue = "PROFIT!! One more thing. You can also upgrade stuff at the bottom right!"
+      tutorial = 6
+    end
+  end
+
+  if tutorial == 6 then
+    if col4 == true then
+      dialogue = "Ok gtg lol bye"
+      tutorial = 7
+    end
+  end
+
+  if tutorial == 7 then
+    tY = tY + 0.5
+  end
+  --end tutorial
+
+  mouseY = love.mouse.getY()
+  mouseX = love.mouse.getX()
+  if col4 == true then
+    if mouseY > 450 and mouseY < 490 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) then
+      if man.money > layingPrice - 1 then
+        money = money - layingPrice
+        eggrate = eggrate - 0.2
+      end
+    end
+  end
 end
 
 function Play:draw()
@@ -129,7 +200,8 @@ function Play:draw()
   love.graphics.draw(takeall,185,25)
   love.graphics.draw(chicken,75,500)
   love.graphics.draw(upgrade, 650, 500)
-  love.graphics.print(dialogue,250,275)
+  love.graphics.print(dialogue,100,tY)
+  love.graphics.print(mouseX..", "..mouseY)
 
   if col4 == true then
     love.graphics.draw(button, 650, 450)
