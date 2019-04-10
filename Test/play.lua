@@ -12,12 +12,16 @@ local upgrade = love.graphics.newImage("upgrade.png")
 local button = love.graphics.newImage("button.png")
 local egglimit = 10
 local eggslaid = 0
-local eggrate = 1
+local eggrate = 5
+local egglimitPrice = 10
 local time = love.timer.getTime() -- laying eggs
 local time1 = love.timer.getTime() -- cooking
 local time2 = love.timer.getTime() -- also cooking
 local time3 = love.timer.getTime() -- taking eggs from pan
 local time4 = love.timer.getTime() -- stamina
+local time5 = love.timer.getTime() -- button delay
+local time6 = love.timer.getTime() -- button delay
+local time7 = love.timer.getTime() -- button delay
 local col = false
 local eggsheld = 0
 local panlimit = 10
@@ -124,7 +128,7 @@ function Play:update(dt)
 
   if tutorial == 1 then
     if love.keyboard.isDown('p') and tutorial == 1 then
-      dialogue = "NICE! Now, go to the chicken for eggs!"
+      dialogue = "NICE! Now, go to and click the chicken for eggs! The chicken also makes 1 egg every 5 secs by itself."
       tutorial = 2
     end
     if col == true then
@@ -142,7 +146,7 @@ function Play:update(dt)
 
   if tutorial == 3 then
     if col1 == true then
-      dialogue = "The eggs are cooking! They'll take like... 5 secs per egg."
+      dialogue = "The eggs are cooking! They'll take like... 5 secs per egg. But could you... dare I ask... click the pan?"
       tutorial = 4
     end
   end
@@ -176,13 +180,34 @@ function Play:update(dt)
   mouseY = love.mouse.getY()
   mouseX = love.mouse.getX()
   if col4 == true then
-    if mouseY > 450 and mouseY < 490 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) then
-      if man.money > layingPrice - 1 then
-        money = money - layingPrice
-        eggrate = eggrate - 0.2
-      end
+    if mouseY > 450 and mouseY < 490 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= layingPrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - layingPrice
+      eggrate = eggrate - 0.05
+      layingPrice = layingPrice + 5
+      time5 = love.timer.getTime()
+    end
+
+    if mouseY > 400 and mouseY < 440 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= egglimitPrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - egglimitPrice
+      egglimit = egglimit + 2
+      egglimitPrice = egglimitPrice + 5
+      time5 = love.timer.getTime()
     end
   end
+
+  if mouseX >= 75 and mouseX <= 125 and mouseY >= 500 and mouseY <= 580 and love.mouse.isDown(1) and love.timer.getTime() - time5 > 0.2 and eggslaid < egglimit then
+    eggslaid = eggslaid + 1
+    time5 = love.timer.getTime()
+  end
+
+  if mouseX >= 75 and mouseX <= 130 and mouseY >= 50 and mouseY <= 70 and love.mouse.isDown(1) and love.timer.getTime() - time5 > 0.2 then
+    if eggspan > 0 and donelimit > eggsdone then
+      eggspan = eggspan - 1
+      eggsdone = eggsdone + 1
+      time5 = love.timer.getTime()
+    end
+  end
+
 end
 
 function Play:draw()
@@ -207,6 +232,10 @@ function Play:draw()
     love.graphics.draw(button, 650, 450)
     love.graphics.print("FASTER LAYING",650,455)
     love.graphics.print("$"..layingPrice,650,475)
+
+    love.graphics.draw(button, 650, 400)
+    love.graphics.print("BIGGER NEST",650,405)
+    love.graphics.print("$"..egglimitPrice,650,425)
   end
 
 end
