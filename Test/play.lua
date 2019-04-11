@@ -20,8 +20,6 @@ local time2 = love.timer.getTime() -- also cooking
 local time3 = love.timer.getTime() -- taking eggs from pan
 local time4 = love.timer.getTime() -- stamina
 local time5 = love.timer.getTime() -- button delay
-local time6 = love.timer.getTime() -- button delay
-local time7 = love.timer.getTime() -- button delay
 local col = false
 local eggsheld = 0
 local panlimit = 10
@@ -37,6 +35,8 @@ local layingPrice = 10
 local dialogue = "Welcome to Eggman Incremental! WASD to move."
 local tutorial = 0
 local tY = 270
+local panheatPrice = 10
+local pansizePrice = 10
 
 function Play:new()
   local play = {}
@@ -182,15 +182,28 @@ function Play:update(dt)
   if col4 == true then
     if mouseY > 450 and mouseY < 490 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= layingPrice and love.timer.getTime() - time5 > 0.2 then
       man.money = man.money - layingPrice
-      eggrate = eggrate - 0.05
-      layingPrice = layingPrice + 5
+      eggrate = eggrate - 0.08
+      layingPrice = layingPrice + 2
       time5 = love.timer.getTime()
     end
 
     if mouseY > 400 and mouseY < 440 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= egglimitPrice and love.timer.getTime() - time5 > 0.2 then
       man.money = man.money - egglimitPrice
       egglimit = egglimit + 2
-      egglimitPrice = egglimitPrice + 5
+      egglimitPrice = egglimitPrice + 2
+      time5 = love.timer.getTime()
+    end
+
+    if mouseY > 350 and mouseY < 390 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= panheatPrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - panheatPrice
+      cookrate = cookrate - 0.08
+      panheatPrice = panheatPrice + 2
+      time5 = love.timer.getTime()
+    end
+    if mouseY > 300 and mouseY < 340 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= pansizePrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - pansizePrice
+      panlimit = panlimit + 2
+      pansizePrice = pansizePrice + 2
       time5 = love.timer.getTime()
     end
   end
@@ -236,6 +249,16 @@ function Play:draw()
     love.graphics.draw(button, 650, 400)
     love.graphics.print("BIGGER NEST",650,405)
     love.graphics.print("$"..egglimitPrice,650,425)
+
+    love.graphics.draw(button, 650, 350)
+    love.graphics.print("HOTTER PAN", 650, 355)
+    love.graphics.print("$"..panheatPrice,650,375)
+
+    love.graphics.draw(button, 650, 300)
+    love.graphics.print("BIGGER PAN", 650, 305)
+    love.graphics.print("$"..pansizePrice,650,325)
+
+    
   end
 
 end
