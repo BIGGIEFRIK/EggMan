@@ -11,6 +11,7 @@ local takeall = love.graphics.newImage("take all.png")
 local upgrade = love.graphics.newImage("upgrade.png")
 local button = love.graphics.newImage("button.png")
 local egglimit = 10
+local plateSizePrice = 10
 local eggslaid = 0
 local eggrate = 5
 local egglimitPrice = 10
@@ -37,6 +38,9 @@ local tutorial = 0
 local tY = 270
 local panheatPrice = 10
 local pansizePrice = 10
+local workratePrice = 10
+local eggvalPrice = 10
+local eggvalue = 1
 
 function Play:new()
   local play = {}
@@ -77,7 +81,7 @@ function Play:update(dt)
   end
 
   if col3 == true then
-    man.money = man.money + eggscookedheld
+    man.money = man.money + eggscookedheld * eggvalue
     eggscookedheld = 0
   end
 
@@ -206,6 +210,26 @@ function Play:update(dt)
       pansizePrice = pansizePrice + 2
       time5 = love.timer.getTime()
     end
+    if mouseY > 250 and mouseY < 290 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= plateSizePrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - plateSizePrice
+      donelimit = donelimit + 2
+      plateSizePrice = plateSizePrice + 2
+      time5 = love.timer.getTime()
+    end
+
+    if mouseY > 200 and mouseY < 240 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= workratePrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - workratePrice
+      workratePrice = workratePrice + 2
+      man.workrate = man.workrate - 0.04
+      time5 = love.timer.getTime()
+    end
+
+    if mouseY > 150 and mouseY < 190 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= eggvalPrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - eggvalPrice
+      eggvalPrice = eggvalPrice + 2
+      eggvalue = eggvalue + 1
+      time5 = love.timer.getTime()
+    end
   end
 
   if mouseX >= 75 and mouseX <= 125 and mouseY >= 500 and mouseY <= 580 and love.mouse.isDown(1) and love.timer.getTime() - time5 > 0.2 and eggslaid < egglimit then
@@ -258,7 +282,18 @@ function Play:draw()
     love.graphics.print("BIGGER PAN", 650, 305)
     love.graphics.print("$"..pansizePrice,650,325)
 
-    
+    love.graphics.draw(button, 650, 250)
+    love.graphics.print("BIGGER PLATE", 650, 255)
+    love.graphics.print("$"..plateSizePrice, 650, 275)
+
+    love.graphics.draw(button, 650, 200)
+    love.graphics.print("FASTER WORK", 650, 205)
+    love.graphics.print("$"..workratePrice, 650, 225)
+
+    love.graphics.draw(button, 650, 150)
+    love.graphics.print("BETTER EGGS", 650, 155)
+    love.graphics.print("$"..eggvalPrice, 650, 175)
+
   end
 
 end

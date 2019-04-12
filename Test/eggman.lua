@@ -18,7 +18,7 @@ function Eggman:load()
   self.py = 300
   self.speed = 1
   self.stamina = 100
-  self.money = 10000000000000000000000000000000000000000000000000000000000000000
+  self.money = 100
   self.workrate = 1
   self.img = love.graphics.newImage("eggman.png")
 end
