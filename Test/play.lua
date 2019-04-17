@@ -30,7 +30,6 @@ local arrowx = 140
 local arrowgo = "r"
 local eggsdone = 0
 local donelimit = 10
-local eggscookedheld = 24
 local cookrate = 5
 local layingPrice = 10
 local dialogue = "Welcome to Eggman Incremental! WASD to move."
@@ -74,15 +73,15 @@ function Play:update(dt)
     if love.timer.getTime() - time3 > man.workrate then
       if eggsdone > 0 then
         eggsdone = eggsdone - 1
-        eggscookedheld = eggscookedheld + 1
+        man.eggscookedheld = man.eggscookedheld + 1
         time3 = love.timer.getTime()
       end
     end
   end
 
   if col3 == true then
-    man.money = man.money + eggscookedheld * eggvalue
-    eggscookedheld = 0
+    man.money = man.money + man.eggscookedheld * eggvalue
+    man.eggscookedheld = 0
   end
 
   col = CheckCollision(90,500,30,60, man.px, man.py,50,50) -- chicken
@@ -254,7 +253,7 @@ function Play:draw()
   love.graphics.print("STAMINA: "..man.stamina,0, 140)
   love.graphics.print("MONEY: "..man.money,0,160)
   love.graphics.print("RAW EGGS: "..eggsheld,0, 100)
-  love.graphics.print("COOKED EGGS: "..eggscookedheld,0, 120)
+  love.graphics.print("COOKED EGGS: "..man.eggscookedheld,0, 120)
   love.graphics.draw(man.img,man.px,man.py)
   love.graphics.draw(sell,650,50)
   love.graphics.draw(pan,75,55)

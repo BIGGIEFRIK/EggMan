@@ -6,7 +6,8 @@ function Eggman:new()
     py,
     speed,
     stamina,
-    workrate
+    workrate,
+    eggscookedheld
   }
   setmetatable(human, self)
   self.__index = self
@@ -20,6 +21,7 @@ function Eggman:load()
   self.stamina = 100
   self.money = 100
   self.workrate = 1
+  self.eggscookedheld = 24
   self.img = love.graphics.newImage("eggman.png")
 end
 
