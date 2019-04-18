@@ -40,6 +40,11 @@ local pansizePrice = 10
 local workratePrice = 10
 local eggvalPrice = 10
 local eggvalue = 1
+BPA = 0
+BN = 0
+BPL = 0
+WR = 0
+BE = 0
 
 function Play:new()
   local play = {}
@@ -194,6 +199,7 @@ function Play:update(dt)
       man.money = man.money - egglimitPrice
       egglimit = egglimit + 2
       egglimitPrice = egglimitPrice + 2
+      BN = BN + 1
       time5 = love.timer.getTime()
     end
 
@@ -207,12 +213,14 @@ function Play:update(dt)
       man.money = man.money - pansizePrice
       panlimit = panlimit + 2
       pansizePrice = pansizePrice + 2
+      BPA = BPA + 1
       time5 = love.timer.getTime()
     end
     if mouseY > 250 and mouseY < 290 and mouseX > 650 and mouseX < 745 and love.mouse.isDown(1) and man.money >= plateSizePrice and love.timer.getTime() - time5 > 0.2 then
       man.money = man.money - plateSizePrice
       donelimit = donelimit + 2
       plateSizePrice = plateSizePrice + 2
+      BPL = BPL + 1
       time5 = love.timer.getTime()
     end
 
@@ -220,6 +228,7 @@ function Play:update(dt)
       man.money = man.money - workratePrice
       workratePrice = workratePrice + 2
       man.workrate = man.workrate - 0.04
+      WR = WR + 1
       time5 = love.timer.getTime()
     end
 
@@ -227,6 +236,7 @@ function Play:update(dt)
       man.money = man.money - eggvalPrice
       eggvalPrice = eggvalPrice + 2
       eggvalue = eggvalue + 1
+      BE = BE + 1
       time5 = love.timer.getTime()
     end
   end

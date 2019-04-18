@@ -19,9 +19,10 @@ function Eggman:load()
   self.py = 300
   self.speed = 1
   self.stamina = 100
-  self.money = 100
+  self.money = 10000000000
   self.workrate = 1
   self.eggscookedheld = 24
+  self.tp = 0
   self.img = love.graphics.newImage("eggman.png")
 end
 
@@ -51,18 +52,22 @@ function Eggman:update(dt)
 
   if self.px > 795 then
     self.px = -5
+    self.tp=self.tp+1
   end
 
   if self.px < -5 then
     self.px = 795
+    self.tp=self.tp+1
   end
 
   if self.py > 590 then
     self.py = -10
+    self.tp=self.tp+1
   end
 
   if self.py < -10 then
     self.py = 590
+    self.tp=self.tp+1
   end
 end
 
