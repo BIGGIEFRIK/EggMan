@@ -39,6 +39,8 @@ local panheatPrice = 10
 local pansizePrice = 10
 local workratePrice = 10
 local eggvalPrice = 10
+local stamMaxPrice = 10
+local speedPrice = 100
 local eggvalue = 1
 BPA = 0
 BN = 0
@@ -65,10 +67,11 @@ function Play:update(dt)
     eggslaid = 0
   end
   if col1 == true then
-    if love.timer.getTime() - time2 > man.workrate then
+    if love.timer.getTime() - time2 > man.workrate and man.stamina > 0 then
       if eggsheld > 0 and panlimit > eggspan then
         eggsheld = eggsheld - 1
         eggspan = eggspan + 1
+        man.stamina = man.stamina - 6
         time2 = love.timer.getTime()
       end
     end
@@ -109,7 +112,7 @@ function Play:update(dt)
   end
 
     if love.timer.getTime() - time4 > 1 then -- stamina rate instead of 1?
-    if man.stamina < 100 and not love.keyboard.isDown('p') then
+    if man.stamina < man.staminamax and not love.keyboard.isDown('p') then
       man.stamina = man.stamina + 5
     end
     time4 = love.timer.getTime()
@@ -254,6 +257,19 @@ function Play:update(dt)
     end
   end
 
+  if mouseY > 450 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= stamMaxPrice and love.timer.getTime() - time5 > 0.2 then
+    man.money = man.money - stamMaxPrice
+    man.staminamax = man.staminamax + 5
+    stamMaxPrice = stamMaxPrice + 2
+    time5 = love.timer.getTime()
+  end
+
+  if mouseY > 400 and mouseY < 440 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= speedPrice and love.timer.getTime() - time5 > 0.2 then
+    man.money = man.money - speedPrice
+    man.multspeed = man.multspeed + 0.05
+    speedPrice = speedPrice + 10
+    time5 = love.timer.getTime()
+  end
 end
 
 function Play:draw()
@@ -302,6 +318,14 @@ function Play:draw()
     love.graphics.draw(button, 650, 150)
     love.graphics.print("BETTER EGGS", 650, 155)
     love.graphics.print("$"..eggvalPrice, 650, 175)
+
+    love.graphics.draw(button, 550, 450)
+    love.graphics.print("BIGGER LUNGS", 550, 455)
+    love.graphics.print("$"..stamMaxPrice, 550, 475)
+
+    love.graphics.draw(button, 550, 400)
+    love.graphics.print("FASTER LEGS", 550, 405)
+    love.graphics.print("$"..speedPrice, 550, 425)
 
   end
 

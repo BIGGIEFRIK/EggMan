@@ -8,7 +8,8 @@ function achieve:new()
     shortcut = love.graphics.newImage("achShortcut.png.png"),
     winded = love.graphics.newImage("achWinded.png"),
     gradea = love.graphics.newImage("achGradeA.png"),
-    thousand = love.graphics.newImage("achThousand.png")
+    thousand = love.graphics.newImage("achThousand.png"),
+    marathoner = love.graphics.newImage("achMarathoner.png")
   }
   setmetatable(a, self)
   self.__index = self
@@ -23,6 +24,7 @@ function achieve:load()
   ach5 = 0
   ach6 = 0
   ach7 = 0
+  ach8 = 0
   timer = love.timer.getTime()
   timer1 = love.timer.getTime()
   timer2 = love.timer.getTime()
@@ -30,15 +32,16 @@ function achieve:load()
   timer4 = love.timer.getTime()
   timer5 = love.timer.getTime()
   timer6 = love.timer.getTime()
+  timer7 = love.timer.getTime()
   ach = 0
 end
 
 function achieve:update(dt)
-  ach = ach1+ach2+ach3+ach4+ach5+ach6+ach7
+  ach = ach1+ach2+ach3+ach4+ach5+ach6+ach7+ach8
 end
 
 function achieve:draw()
-  love.graphics.print("ACHIEVEMENTS: "..ach.."/7",0,180)
+  love.graphics.print("ACHIEVEMENTS: "..ach.."/8",0,180)
   if man.eggscookedheld >= 25 and ach1 == 0 then
     ach1 = 1
     timer = love.timer.getTime()
@@ -95,6 +98,13 @@ function achieve:draw()
     love.graphics.draw(self.thousand, 600, 10)
   end
 
+  if ach8 == 0 and man.staminamax>=325 then
+    ach8 = 1
+    timer7 = love.timer.getTime()
+  end
+  if ach8 == 1 and love.timer.getTime() < timer7 + 5 then
+    love.graphics.draw(self.marathoner,600,10)
+  end
 
 end
 

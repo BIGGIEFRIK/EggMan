@@ -5,7 +5,9 @@ function Eggman:new()
     px,
     py,
     speed,
+    multspeed,
     stamina,
+    staminamax,
     workrate,
     eggscookedheld
   }
@@ -19,11 +21,13 @@ function Eggman:load()
   self.py = 300
   self.speed = 1
   self.stamina = 100
+  self.multspeed = 1
   self.money = 10000000000
   self.workrate = 1
   self.eggscookedheld = 24
   self.tp = 0
   self.img = love.graphics.newImage("eggman.png")
+  self.staminamax = 100
 end
 
 function Eggman:update(dt)
@@ -44,10 +48,10 @@ function Eggman:update(dt)
   end
 
   if love.keyboard.isDown('p') and self.stamina > 0 then
-    self.speed = 5
+    self.speed = 4 * self.multspeed
     self.stamina = self.stamina - 1
   else
-    self.speed = 2
+    self.speed = 2 * self.multspeed
   end
 
   if self.px > 795 then
