@@ -24,7 +24,7 @@ function Eggman:load()
   self.multspeed = 1
   self.money = 10000000000
   self.workrate = 1
-  self.eggscookedheld = 24
+  self.eggscookedheld = 25
   self.tp = 0
   self.img = love.graphics.newImage("eggman.png")
   self.staminamax = 100
