@@ -10,6 +10,8 @@ local arrow = love.graphics.newImage("arrow.png")
 local takeall = love.graphics.newImage("take all.png")
 local upgrade = love.graphics.newImage("upgrade.png")
 local button = love.graphics.newImage("button.png")
+local evilEggs = love.graphics.newImage("evilEggs.png")
+local nuclear = love.graphics.newImage("nuclear thing.png")
 local egglimit = 10
 local plateSizePrice = 10
 local eggslaid = 0
@@ -21,6 +23,7 @@ local time2 = love.timer.getTime() -- also cooking
 local time3 = love.timer.getTime() -- taking eggs from pan
 local time4 = love.timer.getTime() -- stamina
 local time5 = love.timer.getTime() -- button delay
+local time6 = love.timer.getTime() -- news
 local col = false
 local eggsheld = 0
 local panlimit = 10
@@ -40,8 +43,24 @@ local pansizePrice = 10
 local workratePrice = 10
 local eggvalPrice = 10
 local stamMaxPrice = 10
-local speedPrice = 100
+local speedPrice = 1000
 local eggvalue = 1
+local news1 = {
+  "Local farmer ",
+  "Random man ",
+  "Celebrity chef Gordon Ramsegg ",
+  "Some weeb ",
+  "An edgy 16 year old athiest ",
+  "One of the boys "
+}
+local news2 = {
+  "won the hotdog eating contest ",
+  "committed arson ",
+  "planted eggs expecting eggplants ",
+  "now identifies as a war veteran ",
+  "made really good pasta ",
+  "cracked one too many cold ones "
+}
 BPA = 0
 BN = 0
 BPL = 0
@@ -290,6 +309,15 @@ function Play:draw()
   love.graphics.print(dialogue,100,tY)
   love.graphics.print(mouseX..", "..mouseY)
 
+  -- if love.timer.getTime() - time6 > 5 then
+  --   love.graphics.print("NEWS: "..news1[math.random(#news1)], 150, 550)
+  --   time6 = love.timer.getTime()
+  -- end
+
+  --section[math.random(#section)]
+  -- love.graphics.draw(evilEggs, 200, 200)
+  -- love.graphics.draw(nuclear, 350, 0)
+
   if col4 == true then
     love.graphics.draw(button, 650, 450)
     love.graphics.print("FASTER LAYING",650,455)
@@ -326,6 +354,8 @@ function Play:draw()
     love.graphics.draw(button, 550, 400)
     love.graphics.print("FASTER LEGS", 550, 405)
     love.graphics.print("$"..speedPrice, 550, 425)
+
+
 
   end
 
