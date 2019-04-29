@@ -89,7 +89,7 @@ function achieve:draw()
     end
   end
   love.graphics.draw(self.listopen, 750, 300)
-  love.graphics.print("ACHIEVEMENTS: "..ach.."/9",0,180)
+  love.graphics.print("ACHIEVEMENTS: "..ach.."/9",0,200)
   if man.eggscookedheld >= 25 and ach1 == 0 then
     ach1 = 1
     timer = love.timer.getTime()

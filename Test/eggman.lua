@@ -9,7 +9,8 @@ function Eggman:new()
     stamina,
     staminamax,
     workrate,
-    eggscookedheld
+    eggscookedheld,
+    bricks
   }
   setmetatable(human, self)
   self.__index = self
@@ -23,6 +24,7 @@ function Eggman:load()
   self.stamina = 100
   self.multspeed = 1
   self.money = 10000000000
+  self.bricks = 10000000000
   self.workrate = 1
   self.eggscookedheld = 25
   self.tp = 0

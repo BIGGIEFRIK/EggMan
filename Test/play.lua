@@ -12,6 +12,7 @@ local upgrade = love.graphics.newImage("upgrade.png")
 local button = love.graphics.newImage("button.png")
 local evilEggs = love.graphics.newImage("evilEggs.png")
 local nuclear = love.graphics.newImage("nuclear thing.png")
+local build = love.graphics.newImage("build.png")
 local egglimit = 10
 local plateSizePrice = 10
 local eggslaid = 0
@@ -45,6 +46,7 @@ local eggvalPrice = 10
 local stamMaxPrice = 10
 local speedPrice = 1000
 local eggvalue = 1
+local brickPrice = 100
 local news1 = {
   "Local farmer ",
   "Random man ",
@@ -90,7 +92,7 @@ function Play:update(dt)
       if eggsheld > 0 and panlimit > eggspan then
         eggsheld = eggsheld - 1
         eggspan = eggspan + 1
-        man.stamina = man.stamina - 6
+        man.stamina = man.stamina - 1
         time2 = love.timer.getTime()
       end
     end
@@ -99,8 +101,8 @@ function Play:update(dt)
   if col2 == true then
     if love.timer.getTime() - time3 > man.workrate then
       if eggsdone > 0 then
-        eggsdone = eggsdone - 1
-        man.eggscookedheld = man.eggscookedheld + 1
+        eggsdone = eggsdone - man.workrate
+        man.eggscookedheld = man.eggscookedheld + man.workrate
         time3 = love.timer.getTime()
       end
     end
@@ -289,6 +291,12 @@ function Play:update(dt)
     speedPrice = speedPrice + 10
     time5 = love.timer.getTime()
   end
+  if mouseY > 350 and mouseY < 390 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= brickPrice and love.timer.getTime() - time5 > 0.2 then
+    man.money = man.money - brickPrice
+    man.bricks = man.bricks + 1
+    brickPrice = brickPrice + 10
+    time5 = love.timer.getTime()
+  end
 end
 
 function Play:draw()
@@ -299,6 +307,7 @@ function Play:draw()
   love.graphics.print("MONEY: "..man.money,0,160)
   love.graphics.print("RAW EGGS: "..eggsheld,0, 100)
   love.graphics.print("COOKED EGGS: "..man.eggscookedheld,0, 120)
+  love.graphics.print("BRICKS: "..man.bricks,0,180)
   love.graphics.draw(man.img,man.px,man.py)
   love.graphics.draw(sell,650,50)
   love.graphics.draw(pan,75,55)
@@ -308,6 +317,12 @@ function Play:draw()
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
   love.graphics.print(mouseX..", "..mouseY)
+
+  if man.bricks >= 1 then
+    love.graphics.draw(build, 550, 500)
+  end
+
+
 
   -- if love.timer.getTime() - time6 > 5 then
   --   love.graphics.print("NEWS: "..news1[math.random(#news1)], 150, 550)
@@ -355,7 +370,9 @@ function Play:draw()
     love.graphics.print("FASTER LEGS", 550, 405)
     love.graphics.print("$"..speedPrice, 550, 425)
 
-
+    love.graphics.draw(button, 550, 350)
+    love.graphics.print("BUY BRICKS", 550, 355)
+    love.graphics.print("$"..brickPrice, 550, 375)
 
   end
 
