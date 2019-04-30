@@ -10,6 +10,7 @@ function Eggman:new()
     staminamax,
     workrate,
     eggscookedheld,
+    eggschmax,
     bricks
   }
   setmetatable(human, self)
@@ -27,6 +28,7 @@ function Eggman:load()
   self.bricks = 10000000000
   self.workrate = 1
   self.eggscookedheld = 25
+  self.eggschmax = 500
   self.tp = 0
   self.img = love.graphics.newImage("eggman.png")
   self.staminamax = 100

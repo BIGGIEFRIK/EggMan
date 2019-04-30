@@ -13,6 +13,8 @@ local button = love.graphics.newImage("button.png")
 local evilEggs = love.graphics.newImage("evilEggs.png")
 local nuclear = love.graphics.newImage("nuclear thing.png")
 local build = love.graphics.newImage("build.png")
+local silo = love.graphics.newImage("silo.png")
+local silop = love.graphics.newImage("silop.png")
 local egglimit = 10
 local plateSizePrice = 10
 local eggslaid = 0
@@ -25,6 +27,7 @@ local time3 = love.timer.getTime() -- taking eggs from pan
 local time4 = love.timer.getTime() -- stamina
 local time5 = love.timer.getTime() -- button delay
 local time6 = love.timer.getTime() -- news
+local time7 = love.timer.getTime() -- autobrick delay
 local col = false
 local eggsheld = 0
 local panlimit = 10
@@ -47,13 +50,18 @@ local stamMaxPrice = 10
 local speedPrice = 1000
 local eggvalue = 1
 local brickPrice = 100
+local autobrickPrice = 100
+local autobricks = 0
+local maxSiloStorage = 1000
+local siloStorage = 0
 local news1 = {
   "Local farmer ",
   "Random man ",
   "Celebrity chef Gordon Ramsegg ",
   "Some weeb ",
   "An edgy 16 year old athiest ",
-  "One of the boys "
+  "One of the boys ",
+  "Local chemistry teacher"
 }
 local news2 = {
   "won the hotdog eating contest ",
@@ -61,7 +69,8 @@ local news2 = {
   "planted eggs expecting eggplants ",
   "now identifies as a war veteran ",
   "made really good pasta ",
-  "cracked one too many cold ones "
+  "cracked one too many cold ones ",
+  "broke too bad "
 }
 BPA = 0
 BN = 0
@@ -87,6 +96,12 @@ function Play:update(dt)
     eggsheld = eggsheld + eggslaid
     eggslaid = 0
   end
+
+  if love.timer.getTime() - time7 > 1 then
+    man.bricks = man.bricks + autobricks
+    time7 = love.timer.getTime()
+  end
+
   if col1 == true then
     if love.timer.getTime() - time2 > man.workrate and man.stamina > 0 then
       if eggsheld > 0 and panlimit > eggspan then
@@ -118,6 +133,7 @@ function Play:update(dt)
   col2 = CheckCollision(205,30,40,60, man.px, man.py,50,50) -- take all
   col3 = CheckCollision(660,55,50,50, man.px, man.py,50,50) -- sell
   col4 = CheckCollision(660,500,50,30, man.px,man.py,50,50) -- upgrade
+  col5 = CheckCollision(550,500,50,30, man.px,man.py,50,50) -- build
 
   if love.timer.getTime() - time > eggrate and eggslaid < egglimit then
     eggslaid = eggslaid + 1
@@ -263,6 +279,27 @@ function Play:update(dt)
       BE = BE + 1
       time5 = love.timer.getTime()
     end
+
+    if mouseY > 450 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= stamMaxPrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - stamMaxPrice
+      man.staminamax = man.staminamax + 5
+      stamMaxPrice = stamMaxPrice + 2
+      time5 = love.timer.getTime()
+    end
+
+    if mouseY > 400 and mouseY < 440 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= speedPrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - speedPrice
+      man.multspeed = man.multspeed + 0.05
+      speedPrice = speedPrice + 10
+      time5 = love.timer.getTime()
+    end
+
+    if mouseY > 350 and mouseY < 390 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= brickPrice and love.timer.getTime() - time5 > 0.2 then
+      man.money = man.money - brickPrice
+      man.bricks = man.bricks + 1
+      brickPrice = brickPrice + 10
+      time5 = love.timer.getTime()
+    end
   end
 
   if mouseX >= 75 and mouseX <= 125 and mouseY >= 500 and mouseY <= 580 and love.mouse.isDown(1) and love.timer.getTime() - time5 > 0.2 and eggslaid < egglimit then
@@ -278,26 +315,24 @@ function Play:update(dt)
     end
   end
 
-  if mouseY > 450 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= stamMaxPrice and love.timer.getTime() - time5 > 0.2 then
-    man.money = man.money - stamMaxPrice
-    man.staminamax = man.staminamax + 5
-    stamMaxPrice = stamMaxPrice + 2
-    time5 = love.timer.getTime()
+  if mouseX >= 15 and mouseX <= 45 and mouseY >= 370 and mouseY <= 400 and love.mouse.isDown(1) and love.timer.getTime() - time5 > 0.2 then
+    if man.eggscookedheld > 0 and maxSiloStorage > siloStorage then
+      man.eggscookedheld = man.eggscookedheld - 1
+      siloStorage = siloStorage + 1
+      time5 = love.timer.getTime()
+    end
   end
 
-  if mouseY > 400 and mouseY < 440 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= speedPrice and love.timer.getTime() - time5 > 0.2 then
-    man.money = man.money - speedPrice
-    man.multspeed = man.multspeed + 0.05
-    speedPrice = speedPrice + 10
-    time5 = love.timer.getTime()
-  end
-  if mouseY > 350 and mouseY < 390 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.money >= brickPrice and love.timer.getTime() - time5 > 0.2 then
-    man.money = man.money - brickPrice
-    man.bricks = man.bricks + 1
-    brickPrice = brickPrice + 10
-    time5 = love.timer.getTime()
+  if col5 == true then
+    if mouseY > 450 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= autobrickPrice and love.timer.getTime() - time5 > 0.2 then
+      man.bricks = man.bricks - autobrickPrice
+      autobricks = autobricks + 1
+      autobrickPrice = autobrickPrice + 100
+      time5 = love.timer.getTime()
+    end
   end
 end
+
 
 function Play:draw()
   love.graphics.print(eggslaid.."/"..egglimit, 80, 475)
@@ -306,8 +341,9 @@ function Play:draw()
   love.graphics.print("STAMINA: "..man.stamina,0, 140)
   love.graphics.print("MONEY: "..man.money,0,160)
   love.graphics.print("RAW EGGS: "..eggsheld,0, 100)
-  love.graphics.print("COOKED EGGS: "..man.eggscookedheld,0, 120)
+  love.graphics.print("COOKED EGGS: "..man.eggscookedheld.."/"..man.eggschmax,0, 120)
   love.graphics.print("BRICKS: "..man.bricks,0,180)
+  love.graphics.print(siloStorage.."/"..maxSiloStorage, 50, 430)
   love.graphics.draw(man.img,man.px,man.py)
   love.graphics.draw(sell,650,50)
   love.graphics.draw(pan,75,55)
@@ -316,6 +352,8 @@ function Play:draw()
   love.graphics.draw(chicken,75,500)
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
+  love.graphics.draw(silo, 10, 270)
+  love.graphics.draw(silop, 15, 370)
   love.graphics.print(mouseX..", "..mouseY)
 
   if man.bricks >= 1 then
@@ -376,6 +414,11 @@ function Play:draw()
 
   end
 
+  if col5 == true then
+    love.graphics.draw(button, 550, 450)
+    love.graphics.print("("..autobricks..") AUTO-BRICK", 550, 455)
+    love.graphics.print(autobrickPrice.." bricks", 550, 475)
+  end
 end
 
 function CheckCollision(x1,y1,w1,h1, x2,y2,w2,h2)
