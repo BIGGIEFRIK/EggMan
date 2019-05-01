@@ -15,6 +15,7 @@ local nuclear = love.graphics.newImage("nuclear thing.png")
 local build = love.graphics.newImage("build.png")
 local silo = love.graphics.newImage("silo.png")
 local silop = love.graphics.newImage("silop.png")
+local silom = love.graphics.newImage("silom.png")
 local egglimit = 10
 local plateSizePrice = 10
 local eggslaid = 0
@@ -52,8 +53,13 @@ local eggvalue = 1
 local brickPrice = 100
 local autobrickPrice = 100
 local autobricks = 0
-local maxSiloStorage = 1000
+local silobuy = false
+local maxSiloStorage = 0
 local siloStorage = 0
+local siloPrice = 500
+local nuclearPrice = 10000
+local nuclearbuy = false
+local nuclearpower = 0
 local news1 = {
   "Local farmer ",
   "Random man ",
@@ -99,6 +105,11 @@ function Play:update(dt)
 
   if love.timer.getTime() - time7 > 1 then
     man.bricks = man.bricks + autobricks
+    if man.eggschmax > man.eggscookedheld + nuclearpower then
+      man.eggscookedheld = man.eggscookedheld + nuclearpower
+    elseif maxSiloStorage > siloStorage + nuclearpower then
+      siloStorage = siloStorage + nuclearpower
+    end
     time7 = love.timer.getTime()
   end
 
@@ -115,9 +126,9 @@ function Play:update(dt)
 
   if col2 == true then
     if love.timer.getTime() - time3 > man.workrate then
-      if eggsdone > 0 then
-        eggsdone = eggsdone - man.workrate
-        man.eggscookedheld = man.eggscookedheld + man.workrate
+      if eggsdone > 0 and man.eggschmax > man.eggscookedheld then
+        eggsdone = eggsdone - 1
+        man.eggscookedheld = man.eggscookedheld + 1
         time3 = love.timer.getTime()
       end
     end
@@ -315,14 +326,6 @@ function Play:update(dt)
     end
   end
 
-  if mouseX >= 15 and mouseX <= 45 and mouseY >= 370 and mouseY <= 400 and love.mouse.isDown(1) and love.timer.getTime() - time5 > 0.2 then
-    if man.eggscookedheld > 0 and maxSiloStorage > siloStorage then
-      man.eggscookedheld = man.eggscookedheld - 1
-      siloStorage = siloStorage + 1
-      time5 = love.timer.getTime()
-    end
-  end
-
   if col5 == true then
     if mouseY > 450 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= autobrickPrice and love.timer.getTime() - time5 > 0.2 then
       man.bricks = man.bricks - autobrickPrice
@@ -330,7 +333,42 @@ function Play:update(dt)
       autobrickPrice = autobrickPrice + 100
       time5 = love.timer.getTime()
     end
+
+    if mouseY > 400 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= siloPrice and love.timer.getTime() - time5 > 0.2 then
+      man.bricks = man.bricks - siloPrice
+      maxSiloStorage = maxSiloStorage + 100
+      silobuy = true
+      siloPrice = siloPrice + 50
+      time5 = love.timer.getTime()
+    end
+
+    if mouseY > 350 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= nuclearPrice and love.timer.getTime() - time5 > 0.2 then
+      man.bricks = man.bricks - nuclearPrice
+      nuclearpower = nuclearpower + 1
+      nuclearbuy = true
+      nuclearPrice = nuclearPrice + 10000
+      time5 = love.timer.getTime()
+    end
   end
+
+  if silobuy == true then
+    if mouseX >= 15 and mouseX <= 45 and mouseY >= 370 and mouseY <= 400 and love.mouse.isDown(1) and love.timer.getTime() - time5 > 0.2 then
+      if man.eggscookedheld > 0 and maxSiloStorage > siloStorage then
+        man.eggscookedheld = man.eggscookedheld - 1
+        siloStorage = siloStorage + 1
+        time5 = love.timer.getTime()
+      end
+    end
+
+    if mouseX >= 45 and mouseX <= 75 and mouseY >= 370 and mouseY <= 400 and love.mouse.isDown(1) and love.timer.getTime() - time5 > 0.2 then
+      if siloStorage > 0 and man.eggschmax > man.eggscookedheld then
+        man.eggscookedheld = man.eggscookedheld + 1
+        siloStorage = siloStorage - 1
+        time5 = love.timer.getTime()
+      end
+    end
+  end
+
 end
 
 
@@ -343,7 +381,6 @@ function Play:draw()
   love.graphics.print("RAW EGGS: "..eggsheld,0, 100)
   love.graphics.print("COOKED EGGS: "..man.eggscookedheld.."/"..man.eggschmax,0, 120)
   love.graphics.print("BRICKS: "..man.bricks,0,180)
-  love.graphics.print(siloStorage.."/"..maxSiloStorage, 50, 430)
   love.graphics.draw(man.img,man.px,man.py)
   love.graphics.draw(sell,650,50)
   love.graphics.draw(pan,75,55)
@@ -352,15 +389,23 @@ function Play:draw()
   love.graphics.draw(chicken,75,500)
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
-  love.graphics.draw(silo, 10, 270)
-  love.graphics.draw(silop, 15, 370)
   love.graphics.print(mouseX..", "..mouseY)
 
   if man.bricks >= 1 then
     love.graphics.draw(build, 550, 500)
   end
 
+  if silobuy == true then
+    love.graphics.draw(silo, 10, 270)
+    love.graphics.draw(silop, 15, 370)
+    love.graphics.draw(silom, 45, 370)
+    love.graphics.print(siloStorage.."/"..maxSiloStorage, 50, 430)
+  end
 
+  if nuclearbuy == true then
+    love.graphics.draw(nuclear, 350, 0)
+    love.graphics.print("NUCLEAR POWER: "..nuclearpower, 350, 120)
+  end
 
   -- if love.timer.getTime() - time6 > 5 then
   --   love.graphics.print("NEWS: "..news1[math.random(#news1)], 150, 550)
@@ -369,7 +414,6 @@ function Play:draw()
 
   --section[math.random(#section)]
   -- love.graphics.draw(evilEggs, 200, 200)
-  -- love.graphics.draw(nuclear, 350, 0)
 
   if col4 == true then
     love.graphics.draw(button, 650, 450)
@@ -411,13 +455,20 @@ function Play:draw()
     love.graphics.draw(button, 550, 350)
     love.graphics.print("BUY BRICKS", 550, 355)
     love.graphics.print("$"..brickPrice, 550, 375)
-
   end
 
   if col5 == true then
     love.graphics.draw(button, 550, 450)
     love.graphics.print("("..autobricks..") AUTO-BRICK", 550, 455)
     love.graphics.print(autobrickPrice.." bricks", 550, 475)
+
+    love.graphics.draw(button, 550, 400)
+    love.graphics.print("SILO STORAGE", 550, 405)
+    love.graphics.print(siloPrice.." bricks", 550, 425)
+
+    love.graphics.draw(button, 550, 350)
+    love.graphics.print("NUCLEAR EGG GEN", 550, 355)
+    love.graphics.print(nuclearPrice.." bricks", 550, 375)
   end
 end
 
