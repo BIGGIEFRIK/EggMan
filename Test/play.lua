@@ -1,4 +1,5 @@
 local Eggman = require 'eggman'
+local Enemy = require 'enemy'
 
 Play = {}
 
@@ -11,6 +12,7 @@ local takeall = love.graphics.newImage("take all.png")
 local upgrade = love.graphics.newImage("upgrade.png")
 local button = love.graphics.newImage("button.png")
 local evilEggs = love.graphics.newImage("evilEggs.png")
+local evileggs = {}
 local nuclear = love.graphics.newImage("nuclear thing.png")
 local build = love.graphics.newImage("build.png")
 local silo = love.graphics.newImage("silo.png")
@@ -55,11 +57,13 @@ local autobrickPrice = 100
 local autobricks = 0
 local silobuy = false
 local maxSiloStorage = 0
-local siloStorage = 0
+siloStorage = 0
 local siloPrice = 500
 local nuclearPrice = 10000
 local nuclearbuy = false
 local nuclearpower = 0
+local timeEggs = love.timer.getTime()
+local evilkiller = 1
 local news1 = {
   "Local farmer ",
   "Random man ",
@@ -342,13 +346,24 @@ function Play:update(dt)
       time5 = love.timer.getTime()
     end
 
-    if mouseY > 350 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= nuclearPrice and love.timer.getTime() - time5 > 0.2 then
+    if mouseY > 350 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= nuclearPrice and silobuy == true and love.timer.getTime() - time5 > 0.2 then
       man.bricks = man.bricks - nuclearPrice
       nuclearpower = nuclearpower + 1
-      nuclearbuy = true
-      nuclearPrice = nuclearPrice + 10000
-      time5 = love.timer.getTime()
+      if nuclearbuy == false then
+        nuclearbuy = true
+        timeEggs = love.timer.getTime()
+        nuclearPrice = nuclearPrice + 10000
+        time5 = love.timer.getTime()
+      else
+        nuclearPrice = nuclearPrice + 10000
+        time5 = love.timer.getTime()
+      end
+
     end
+  end
+  if nuclearbuy == true and love.timer.getTime() - timeEggs > (5/(nuclearpower/(2*evilkiller))) then
+    table.insert(evileggs, Enemy:new(380, 120))
+    timeEggs = love.timer.getTime()
   end
 
   if silobuy == true then
@@ -368,7 +383,14 @@ function Play:update(dt)
       end
     end
   end
-
+  if #evileggs > 0 then
+    for i = 1, #evileggs do
+      evileggs[i]:update()
+    end
+    if evileggs[1].exists == false then
+      table.remove(evileggs, 1)
+    end
+  end
 end
 
 
@@ -389,7 +411,14 @@ function Play:draw()
   love.graphics.draw(chicken,75,500)
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
-  love.graphics.print(mouseX..", "..mouseY)
+  love.graphics.print(#evileggs)--mouseX..", "..mouseY)
+  if nuclearpower >= 1 then
+    --love.graphics.draw(evilEggs, eex,eey)
+    for i = 1, #evileggs do
+      evileggs[i]:draw()
+    end
+
+  end
 
   if man.bricks >= 1 then
     love.graphics.draw(build, 550, 500)
@@ -468,7 +497,7 @@ function Play:draw()
 
     love.graphics.draw(button, 550, 350)
     love.graphics.print("NUCLEAR EGG GEN", 550, 355)
-    love.graphics.print(nuclearPrice.." bricks", 550, 375)
+    love.graphics.print(nuclearPrice.." bricks, silo", 550, 375)
   end
 end
 

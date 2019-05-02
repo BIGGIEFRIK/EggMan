@@ -24,8 +24,8 @@ function Eggman:load()
   self.speed = 1
   self.stamina = 100
   self.multspeed = 1
-  self.money = 0
-  self.bricks = 0
+  self.money = 1000000
+  self.bricks = 1000000
   self.workrate = 1
   self.eggscookedheld = 0
   self.eggschmax = 500
