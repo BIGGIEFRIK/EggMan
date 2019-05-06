@@ -61,9 +61,10 @@ siloStorage = 0
 local siloPrice = 500
 local nuclearPrice = 10000
 local nuclearbuy = false
-local nuclearpower = 0
+nuclearpower = 0
 local timeEggs = love.timer.getTime()
-local evilkiller = 1
+evilkiller = 1
+local evkillPrice = 5000
 local news1 = {
   "Local farmer ",
   "Random man ",
@@ -334,11 +335,11 @@ function Play:update(dt)
     if mouseY > 450 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= autobrickPrice and love.timer.getTime() - time5 > 0.2 then
       man.bricks = man.bricks - autobrickPrice
       autobricks = autobricks + 1
-      autobrickPrice = autobrickPrice + 100
+      autobrickPrice = autobrickPrice + 50
       time5 = love.timer.getTime()
     end
 
-    if mouseY > 400 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= siloPrice and love.timer.getTime() - time5 > 0.2 then
+    if mouseY > 400 and mouseY < 440 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= siloPrice and love.timer.getTime() - time5 > 0.2 then
       man.bricks = man.bricks - siloPrice
       maxSiloStorage = maxSiloStorage + 100
       silobuy = true
@@ -346,7 +347,14 @@ function Play:update(dt)
       time5 = love.timer.getTime()
     end
 
-    if mouseY > 350 and mouseY < 490 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= nuclearPrice and silobuy == true and love.timer.getTime() - time5 > 0.2 then
+    if mouseY > 300 and mouseY < 340 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= evkillPrice and love.timer.getTime() - time5 > 0.2 then
+      man.bricks = man.bricks - evkillPrice
+      evilkiller = evilkiller + 1
+      evkillPrice = evkillPrice + 500
+      time5 = love.timer.getTime()
+    end
+
+    if mouseY > 350 and mouseY < 390 and mouseX > 550 and mouseX < 645 and love.mouse.isDown(1) and man.bricks >= nuclearPrice and silobuy == true and love.timer.getTime() - time5 > 0.2 then
       man.bricks = man.bricks - nuclearPrice
       nuclearpower = nuclearpower + 1
       if nuclearbuy == false then
@@ -359,9 +367,11 @@ function Play:update(dt)
         time5 = love.timer.getTime()
       end
 
+
+
     end
   end
-  if nuclearbuy == true and love.timer.getTime() - timeEggs > (5/(nuclearpower/(2*evilkiller))) then
+  if nuclearbuy == true and love.timer.getTime() - timeEggs > (evilkiller/nuclearpower) then
     table.insert(evileggs, Enemy:new(380, 120))
     timeEggs = love.timer.getTime()
   end
@@ -411,7 +421,7 @@ function Play:draw()
   love.graphics.draw(chicken,75,500)
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
-  love.graphics.print(#evileggs)--mouseX..", "..mouseY)
+  love.graphics.print(mouseX..", "..mouseY)
   if nuclearpower >= 1 then
     --love.graphics.draw(evilEggs, eex,eey)
     for i = 1, #evileggs do
@@ -498,6 +508,12 @@ function Play:draw()
     love.graphics.draw(button, 550, 350)
     love.graphics.print("NUCLEAR EGG GEN", 550, 355)
     love.graphics.print(nuclearPrice.." bricks, silo", 550, 375)
+
+    if nuclearbuy == true then
+      love.graphics.draw(button, 550, 300)
+      love.graphics.print("MOB KILLER", 550, 305)
+      love.graphics.print(evkillPrice.." bricks", 550, 325)
+    end
   end
 end
 

@@ -15,13 +15,15 @@ end
 
 function Enemy:update(dt)
   if self.y < 350 then
-    self.y = self.y + 1
+    self.y = self.y + nuclearpower/evilkiller
   else
-    self.x = self.x - 1
+    self.x = self.x - nuclearpower/evilkiller
   end
   if self.x <= 100 then
-    if siloStorage > 0 then
-      siloStorage = siloStorage - 1
+    if siloStorage > nuclearpower then
+      siloStorage = siloStorage - nuclearpower
+    else
+      siloStorage = 0
     end
     self.exists = false
   end
