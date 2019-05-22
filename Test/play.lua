@@ -5,7 +5,7 @@ Play = {}
 
 local egg = love.graphics.newImage("egg.png")
 local pan = love.graphics.newImage("pan.png")
-local chicken = love.graphics.newImage("chicken.png")
+local chickenpng = love.graphics.newImage("chicken.png")
 local sell = love.graphics.newImage("sell.png")
 local arrow = love.graphics.newImage("arrow.png")
 local takeall = love.graphics.newImage("take all.png")
@@ -64,6 +64,7 @@ local nuclearbuy = false
 nuclearpower = 0
 local timeEggs = love.timer.getTime()
 evilkiller = 1
+chicken = 0
 local evkillPrice = 5000
 local news1 = {
   "Local farmer ",
@@ -367,11 +368,23 @@ function Play:update(dt)
         time5 = love.timer.getTime()
       end
 
-
+      if mouseY > 450 and mouseY < 490 and mouseX > 450 and mouseX < 545 and love.mouse.isDown(1) and man.money >= 1000000 and love.timer.getTime() - time5 > 0.2 then
+        -- man.money = man.money - 1000000
+        -- chicken = chicken + 1
+        -- eggvalue = 1
+        -- eggsheld = 0
+        -- eggscookedheld = 0
+        -- eggspan = 0
+        -- eggslaid = 0
+        -- eggsdone = 0
+        -- man.bricks = 0
+        man.money = "testing"
+        time5 = love.timer.getTime()
+      end
 
     end
   end
-  if nuclearbuy == true and love.timer.getTime() - timeEggs > (evilkiller/nuclearpower) then
+  if nuclearbuy == true and love.timer.getTime() - timeEggs > (evilkiller/(nuclearpower/2)) then
     table.insert(evileggs, Enemy:new(380, 120))
     timeEggs = love.timer.getTime()
   end
@@ -418,7 +431,7 @@ function Play:draw()
   love.graphics.draw(pan,75,55)
   love.graphics.draw(arrow,arrowx,50)
   love.graphics.draw(takeall,185,25)
-  love.graphics.draw(chicken,75,500)
+  love.graphics.draw(chickenpng,75,500)
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
   love.graphics.print(mouseX..", "..mouseY)
@@ -496,7 +509,7 @@ function Play:draw()
     love.graphics.print("$"..brickPrice, 550, 375)
   end
 
-  if col5 == true then
+  if col5 == true and man.bricks > 0 then
     love.graphics.draw(button, 550, 450)
     love.graphics.print("("..autobricks..") AUTO-BRICK", 550, 455)
     love.graphics.print(autobrickPrice.." bricks", 550, 475)
@@ -508,6 +521,11 @@ function Play:draw()
     love.graphics.draw(button, 550, 350)
     love.graphics.print("NUCLEAR EGG GEN", 550, 355)
     love.graphics.print(nuclearPrice.." bricks, silo", 550, 375)
+
+    love.graphics.draw(button, 450, 450)
+    love.graphics.print("ASCEND", 450, 455)
+    love.graphics.print("$1M", 450, 475)
+
 
     if nuclearbuy == true then
       love.graphics.draw(button, 550, 300)
