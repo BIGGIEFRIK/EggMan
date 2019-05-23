@@ -9,12 +9,12 @@ local chickenpng = love.graphics.newImage("chicken.png")
 local sell = love.graphics.newImage("sell.png")
 local arrow = love.graphics.newImage("arrow.png")
 local takeall = love.graphics.newImage("take all.png")
-local upgrade = love.graphics.newImage("upgrade.png")
+local upgrade = love.graphics.newImage("blank.png")
 local button = love.graphics.newImage("button.png")
 local evilEggs = love.graphics.newImage("evilEggs.png")
 local evileggs = {}
 local nuclear = love.graphics.newImage("nuclear thing.png")
-local build = love.graphics.newImage("build.png")
+local build = love.graphics.newImage("blank.png")
 local silo = love.graphics.newImage("silo.png")
 local silop = love.graphics.newImage("silop.png")
 local silom = love.graphics.newImage("silom.png")
@@ -150,7 +150,7 @@ function Play:update(dt)
   col2 = CheckCollision(205,30,40,60, man.px, man.py,50,50) -- take all
   col3 = CheckCollision(660,55,50,50, man.px, man.py,50,50) -- sell
   col4 = CheckCollision(660,500,50,30, man.px,man.py,50,50) -- upgrade
-  col5 = CheckCollision(550,500,50,30, man.px,man.py,50,50) -- build
+  col5 = CheckCollision(560,510,50,30, man.px,man.py,50,50) -- build
 
   if love.timer.getTime() - time > eggrate and eggslaid < egglimit then
     eggslaid = eggslaid + 1
@@ -368,19 +368,7 @@ function Play:update(dt)
         time5 = love.timer.getTime()
       end
 
-      if mouseY > 450 and mouseY < 490 and mouseX > 450 and mouseX < 545 and love.mouse.isDown(1) and man.money >= 1000000 and love.timer.getTime() - time5 > 0.2 then
-        -- man.money = man.money - 1000000
-        -- chicken = chicken + 1
-        -- eggvalue = 1
-        -- eggsheld = 0
-        -- eggscookedheld = 0
-        -- eggspan = 0
-        -- eggslaid = 0
-        -- eggsdone = 0
-        -- man.bricks = 0
-        man.money = "testing"
-        time5 = love.timer.getTime()
-      end
+
 
     end
   end
@@ -414,6 +402,31 @@ function Play:update(dt)
       table.remove(evileggs, 1)
     end
   end
+
+  if mouseY > 550 and mouseY < 590 and mouseX > 580 and mouseX < 680 and love.mouse.isDown(1) and man.money >= 1000000 and love.timer.getTime() - time5 > 0.2 then
+    man.money = man.money - 1000000
+    chicken = chicken + 1
+    eggvalue = 1
+    eggsheld = 0
+    eggscookedheld = 0
+    eggspan = 0
+    eggslaid = 0
+    eggsdone = 0
+    man.bricks = 0
+    eggvalPrice= 10
+    autobricks = 0
+    autobrickPrice = 100
+    silobuy=false
+    nuclearbuy=false
+    siloStorage=0
+    siloPrice=500
+    maxSiloStorage=100
+    nuclearPrice=10000
+    nuclearpower=0
+    evilkiller=0
+    evkillPrice=5000
+    time5 = love.timer.getTime()
+  end
 end
 
 
@@ -426,6 +439,7 @@ function Play:draw()
   love.graphics.print("RAW EGGS: "..eggsheld,0, 100)
   love.graphics.print("COOKED EGGS: "..man.eggscookedheld.."/"..man.eggschmax,0, 120)
   love.graphics.print("BRICKS: "..man.bricks,0,180)
+  love.graphics.print("CHICKEN: "..chicken,0,200)
   love.graphics.draw(man.img,man.px,man.py)
   love.graphics.draw(sell,650,50)
   love.graphics.draw(pan,75,55)
@@ -435,6 +449,7 @@ function Play:draw()
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
   love.graphics.print(mouseX..", "..mouseY)
+  love.graphics.print("UPGRADE",653, 505)
   if nuclearpower >= 1 then
     --love.graphics.draw(evilEggs, eex,eey)
     for i = 1, #evileggs do
@@ -445,6 +460,7 @@ function Play:draw()
 
   if man.bricks >= 1 then
     love.graphics.draw(build, 550, 500)
+    love.graphics.print("BUILD",563, 505)
   end
 
   if silobuy == true then
@@ -522,16 +538,21 @@ function Play:draw()
     love.graphics.print("NUCLEAR EGG GEN", 550, 355)
     love.graphics.print(nuclearPrice.." bricks, silo", 550, 375)
 
-    love.graphics.draw(button, 450, 450)
-    love.graphics.print("ASCEND", 450, 455)
-    love.graphics.print("$1M", 450, 475)
+    love.graphics.draw(button, 550, 300)
+    love.graphics.print("MOB KILLER", 550, 305)
+    love.graphics.print(evkillPrice.." bricks", 550, 325)
+
+
 
 
     if nuclearbuy == true then
-      love.graphics.draw(button, 550, 300)
-      love.graphics.print("MOB KILLER", 550, 305)
-      love.graphics.print(evkillPrice.." bricks", 550, 325)
+
     end
+  end
+  if man.money>=1000000 then
+    love.graphics.draw(button, 585, 550)
+    love.graphics.print("ASCEND", 585, 555)
+    love.graphics.print("$1M", 585, 575)
   end
 end
 
