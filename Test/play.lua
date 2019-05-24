@@ -154,7 +154,7 @@ function Play:update(dt)
       time5 = love.timer.getTime()
     end
 
-    if autofarm == false and mouseY > 400 and mouseY < 440 and mouseX > 450 and mouseX < 545 and love.mouse.isDown(1) and chicken>0 and love.timer.getTime() - time5 > 0.2 then
+    if autotake == false and mouseY > 400 and mouseY < 440 and mouseX > 450 and mouseX < 545 and love.mouse.isDown(1) and chicken>0 and love.timer.getTime() - time5 > 0.2 then
       chicken = chicken - 1
       autotake = true
       time5 = love.timer.getTime()
@@ -272,7 +272,15 @@ function Play:update(dt)
   end
 
   if autotake == true then
-
+    if eggsdone>=donelimit then
+      if eggsdone + man.eggscookedheld > man.eggschmax then
+        eggsdone = eggsdone - (man.eggschmax - man.eggscookedheld)
+        man.eggscookedheld = man.eggscookedheld + man.eggschmax
+      else
+        man.eggscookedheld = man.eggscookedheld + eggsdone
+        eggsdone = 0
+      end
+    end
   end
 
   mouseY = love.mouse.getY()
@@ -481,7 +489,7 @@ function Play:draw()
   love.graphics.draw(chickenpng,75,500)
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
-  love.graphics.print(mouseX..", "..mouseY)
+  love.graphics.print(man.eggschmax)
   love.graphics.print("UPGRADE",653, 505)
   if nuclearpower >= 1 then
     --love.graphics.draw(evilEggs, eex,eey)
