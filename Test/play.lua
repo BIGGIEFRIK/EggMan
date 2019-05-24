@@ -66,6 +66,8 @@ local timeEggs = love.timer.getTime()
 evilkiller = 1
 chicken = 0
 local evkillPrice = 5000
+autofarm = false
+autotake = false
 local news1 = {
   "Local farmer ",
   "Random man ",
@@ -145,12 +147,27 @@ function Play:update(dt)
     man.eggscookedheld = 0
   end
 
+  if col6 == true and chicken>=1 then
+    if autofarm == false and mouseY > 450 and mouseY < 490 and mouseX > 450 and mouseX < 545 and love.mouse.isDown(1) and chicken>0 and love.timer.getTime() - time5 > 0.2 then
+      chicken = chicken - 1
+      autofarm = true
+      time5 = love.timer.getTime()
+    end
+
+    if autofarm == false and mouseY > 400 and mouseY < 440 and mouseX > 450 and mouseX < 545 and love.mouse.isDown(1) and chicken>0 and love.timer.getTime() - time5 > 0.2 then
+      chicken = chicken - 1
+      autotake = true
+      time5 = love.timer.getTime()
+    end
+  end
+
   col = CheckCollision(90,500,30,60, man.px, man.py,50,50) -- chicken
   col1 = CheckCollision(40,35,90,30, man.px, man.py,50,50) -- pan
   col2 = CheckCollision(205,30,40,60, man.px, man.py,50,50) -- take all
   col3 = CheckCollision(660,55,50,50, man.px, man.py,50,50) -- sell
   col4 = CheckCollision(660,500,50,30, man.px,man.py,50,50) -- upgrade
   col5 = CheckCollision(560,510,50,30, man.px,man.py,50,50) -- build
+  col6 = CheckCollision(460,490,50,30, man.px,man.py,50,50) -- ASCENSION
 
   if love.timer.getTime() - time > eggrate and eggslaid < egglimit then
     eggslaid = eggslaid + 1
@@ -241,6 +258,22 @@ function Play:update(dt)
     tY = tY + 0.5
   end
   --end tutorial
+
+  if autofarm == true then
+    if egglimit==eggslaid then
+      if eggslaid+eggspan>panlimit then
+        eggslaid = eggslaid - (panlimit - eggspan)
+        eggspan = panlimit
+      else
+        eggspan = eggspan + eggslaid
+        eggslaid=0
+      end
+    end
+  end
+
+  if autotake == true then
+
+  end
 
   mouseY = love.mouse.getY()
   mouseX = love.mouse.getX()
@@ -463,6 +496,12 @@ function Play:draw()
     love.graphics.print("BUILD",563, 505)
   end
 
+  if chicken >= 1 then
+    love.graphics.draw(upgrade, 450, 500)
+    love.graphics.print("ASCENSION", 447, 505)
+
+  end
+
   if silobuy == true then
     love.graphics.draw(silo, 10, 270)
     love.graphics.draw(silop, 15, 370)
@@ -541,13 +580,23 @@ function Play:draw()
     love.graphics.draw(button, 550, 300)
     love.graphics.print("MOB KILLER", 550, 305)
     love.graphics.print(evkillPrice.." bricks", 550, 325)
+  end
 
-
-
-
-    if nuclearbuy == true then
-
+  if col6 == true and chicken>0 then
+    if autofarm == false then
+      love.graphics.draw(button, 450, 450)
+      love.graphics.print("AUTO-FARMING", 450, 455)
+      love.graphics.print("1 CHICKEN", 450, 475)
     end
+    if autotake == false then
+      love.graphics.draw(button, 450, 400)
+      love.graphics.print("AUTO-TAKER", 450, 405)
+      love.graphics.print("1 CHICKEN", 450, 425)
+    end
+
+    love.graphics.draw(button, 450, 350)
+    love.graphics.print("AUTO-SELLER", 450, 355)
+    love.graphics.print("1 CHICKEN", 450, 375)
   end
   if man.money>=1000000 then
     love.graphics.draw(button, 585, 550)
