@@ -68,6 +68,7 @@ chicken = 0
 local evkillPrice = 5000
 autofarm = false
 autotake = false
+autosell = false
 local news1 = {
   "Local farmer ",
   "Random man ",
@@ -157,6 +158,12 @@ function Play:update(dt)
     if autotake == false and mouseY > 400 and mouseY < 440 and mouseX > 450 and mouseX < 545 and love.mouse.isDown(1) and chicken>0 and love.timer.getTime() - time5 > 0.2 then
       chicken = chicken - 1
       autotake = true
+      time5 = love.timer.getTime()
+    end
+
+    if autosell == false and mouseY > 350 and mouseY < 390 and mouseX > 450 and mouseX < 545 and love.mouse.isDown(1) and chicken>0 and love.timer.getTime() - time5 > 0.2 then
+      chicken = chicken - 1
+      autosell = true
       time5 = love.timer.getTime()
     end
   end
@@ -275,10 +282,17 @@ function Play:update(dt)
     if eggsdone>=donelimit then
       if eggsdone + man.eggscookedheld > man.eggschmax then
         eggsdone = eggsdone - (man.eggschmax - man.eggscookedheld)
-        man.eggscookedheld = man.eggscookedheld + man.eggschmax
+        man.eggscookedheld = man.eggschmax
       else
         man.eggscookedheld = man.eggscookedheld + eggsdone
         eggsdone = 0
+      end
+    end
+
+    if autosell == true then
+      if man.eggscookedheld>=man.eggschmax then
+        man.money = man.money + (man.eggscookedheld*eggvalue)
+        man.eggscookedheld = 0
       end
     end
   end
@@ -489,7 +503,7 @@ function Play:draw()
   love.graphics.draw(chickenpng,75,500)
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
-  love.graphics.print(man.eggschmax)
+  love.graphics.print(eggvalue)
   love.graphics.print("UPGRADE",653, 505)
   if nuclearpower >= 1 then
     --love.graphics.draw(evilEggs, eex,eey)
@@ -601,10 +615,11 @@ function Play:draw()
       love.graphics.print("AUTO-TAKER", 450, 405)
       love.graphics.print("1 CHICKEN", 450, 425)
     end
-
-    love.graphics.draw(button, 450, 350)
-    love.graphics.print("AUTO-SELLER", 450, 355)
-    love.graphics.print("1 CHICKEN", 450, 375)
+    if autosell == false then
+      love.graphics.draw(button, 450, 350)
+      love.graphics.print("AUTO-SELLER", 450, 355)
+      love.graphics.print("1 CHICKEN", 450, 375)
+    end
   end
   if man.money>=1000000 then
     love.graphics.draw(button, 585, 550)
