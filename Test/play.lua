@@ -42,7 +42,7 @@ local eggsdone = 0
 local donelimit = 10
 local cookrate = 5
 local layingPrice = 10
-local dialogue = "Welcome to Eggman Incremental! WASD to move."
+local dialogue = "Welcome to Eggman! WASD to move."
 local tutorial = 0
 local tY = 270
 local panheatPrice = 10
@@ -54,13 +54,13 @@ local speedPrice = 1000
 local eggvalue = 1
 local brickPrice = 100
 local autobrickPrice = 100
-local autobricks = 0
-local silobuy = false
+autobricks = 0
+silobuy = false
 local maxSiloStorage = 0
 siloStorage = 0
 local siloPrice = 500
 local nuclearPrice = 10000
-local nuclearbuy = false
+nuclearbuy = false
 nuclearpower = 0
 local timeEggs = love.timer.getTime()
 evilkiller = 1
@@ -69,23 +69,40 @@ local evkillPrice = 5000
 autofarm = false
 autotake = false
 autosell = false
+news = ""
 local news1 = {
-  "Local farmer ",
-  "Random man ",
-  "Celebrity chef Gordon Ramsegg ",
-  "Some weeb ",
-  "An edgy 16 year old athiest ",
-  "One of the boys ",
-  "Local chemistry teacher"
+  "Local farmer",
+  "Random man",
+  "Celebrity chef Gordon Ramsegg",
+  "Some weeb",
+  "An edgy 16 year old athiest",
+  "One of the boys",
+  "Local chemistry teacher",
+  "Foot enthusiast",
+  "Macaulay Culkin",
+  "Satan",
+  "Santa",
+  "Young programmer",
+  "Minecraft Steve",
+  "Yo mama",
+  "Fortnite player"
 }
 local news2 = {
-  "won the hotdog eating contest ",
-  "committed arson ",
-  "planted eggs expecting eggplants ",
-  "now identifies as a war veteran ",
-  "made really good pasta ",
-  "cracked one too many cold ones ",
-  "broke too bad "
+  " won the hotdog eating contest",
+  " committed arson",
+  " planted eggs expecting eggplants",
+  " now identifies as a war veteran",
+  " made really good pasta",
+  " cracked one too many cold ones",
+  " broke too bad",
+  " leaving his foot fetish behind",
+  " murdered two home intruders",
+  "'s life is becoming a downward spiral",
+  " died lol",
+  " is gonna have a bad time",
+  " is blown up by creeper",
+  " has reached new levels of obesity",
+  " is basically a cringe normie"
 }
 BPA = 0
 BN = 0
@@ -503,7 +520,7 @@ function Play:draw()
   love.graphics.draw(chickenpng,75,500)
   love.graphics.draw(upgrade, 650, 500)
   love.graphics.print(dialogue,100,tY)
-  love.graphics.print(eggvalue)
+  love.graphics.print(news,150,550)
   love.graphics.print("UPGRADE",653, 505)
   if nuclearpower >= 1 then
     --love.graphics.draw(evilEggs, eex,eey)
@@ -536,10 +553,10 @@ function Play:draw()
     love.graphics.print("NUCLEAR POWER: "..nuclearpower, 350, 120)
   end
 
-  -- if love.timer.getTime() - time6 > 5 then
-  --   love.graphics.print("NEWS: "..news1[math.random(#news1)], 150, 550)
-  --   time6 = love.timer.getTime()
-  -- end
+  if love.timer.getTime() - time6 > 5 then
+    news = "NEWS: "..news1[math.random(#news1)]..news2[math.random(#news2)], 150, 550
+    time6 = love.timer.getTime()
+  end
 
   --section[math.random(#section)]
   -- love.graphics.draw(evilEggs, 200, 200)
