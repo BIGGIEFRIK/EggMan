@@ -69,11 +69,11 @@ local evkillPrice = 5000
 autofarm = false
 autotake = false
 autosell = false
-news = ""
+news = "The news will begin shortly"
 local news1 = {
   "Local farmer",
   "Random man",
-  "Celebrity chef Gordon Ramsegg",
+  "Gordon Ramsay",
   "Some weeb",
   "An edgy 16 year old athiest",
   "One of the boys",
@@ -85,7 +85,14 @@ local news1 = {
   "Young programmer",
   "Minecraft Steve",
   "Yo mama",
-  "Fortnite player"
+  "Fortnite player",
+  "Some homeless dude",
+  "Some egg with a face",
+  "Dbangz",
+  "Lil Pump",
+  "Keanu Reeves",
+  "One of the blonde boyz",
+  "Boomer going through midlife crisis"
 }
 local news2 = {
   " won the hotdog eating contest",
@@ -95,14 +102,21 @@ local news2 = {
   " made really good pasta",
   " cracked one too many cold ones",
   " broke too bad",
-  " leaving his foot fetish behind",
+  " leaving foot fetish behind",
   " murdered two home intruders",
   "'s life is becoming a downward spiral",
   " died lol",
   " is gonna have a bad time",
   " is blown up by creeper",
   " has reached new levels of obesity",
-  " is basically a cringe normie"
+  " is basically a cringe normie",
+  " was eaten alive by rats",
+  " has sold children... for amazing prices!",
+  " is basically best rapper alive",
+  " made a Minecraft parody song",
+  " rated hottest person in history",
+  " is NOT doing what blonde boyz do",
+  " resorts to Fortnite dancing"
 }
 BPA = 0
 BN = 0
@@ -206,7 +220,7 @@ function Play:update(dt)
     end
   end
 
-    if love.timer.getTime() - time4 > 1 then -- stamina rate instead of 1?
+  if love.timer.getTime() - time4 > 1 then -- stamina rate instead of 1?
     if man.stamina < man.staminamax and not love.keyboard.isDown('p') then
       man.stamina = man.stamina + 5
     end
@@ -475,7 +489,7 @@ function Play:update(dt)
     end
   end
 
-  if mouseY > 550 and mouseY < 590 and mouseX > 580 and mouseX < 680 and love.mouse.isDown(1) and man.money >= 1000000 and love.timer.getTime() - time5 > 0.2 then
+  if mouseY > 550 and mouseY < 590 and mouseX > 580 and mouseX < 680 and love.mouse.isDown(1) and man.money >= 1000000000 and love.timer.getTime() - time5 > 0.2 then
     man.money = man.money - 1000000
     chicken = chicken + 1
     eggvalue = 1
@@ -485,6 +499,7 @@ function Play:update(dt)
     eggslaid = 0
     eggsdone = 0
     man.bricks = 0
+    brickPrice = 100
     eggvalPrice= 10
     autobricks = 0
     autobrickPrice = 100
@@ -641,7 +656,7 @@ function Play:draw()
   if man.money>=1000000 then
     love.graphics.draw(button, 585, 550)
     love.graphics.print("ASCEND", 585, 555)
-    love.graphics.print("$1M", 585, 575)
+    love.graphics.print("$1B", 585, 575)
   end
 end
 
